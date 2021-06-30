@@ -10,6 +10,7 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { LoginTypeEnum } from './entities/user.entity';
 
 @Controller('user')
 export class UserController {
@@ -25,9 +26,12 @@ export class UserController {
     return this.userService.findAll();
   }
 
-  @Get(':email')
-  findOne(@Param('email') email: string) {
-    return this.userService.findOne(email);
+  @Get(':email/:login_type')
+  findOne(
+    @Param('email') email: string,
+    @Param('login_type') login_type: LoginTypeEnum,
+  ) {
+    return this.userService.findOne(email, login_type);
   }
 
   @Patch(':email')

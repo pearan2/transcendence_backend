@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { UserRepository } from './entities/user.entity';
+import { LoginTypeEnum, UserRepository } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
@@ -34,9 +34,9 @@ export class UserService {
     }
   }
 
-  async findOne(email: string) {
+  async findOne(email: string, login_type: LoginTypeEnum) {
     try {
-      const result = await this.userRepository.findOne(email);
+      const result = await this.userRepository.findOne({ email, login_type });
       if (!result) throw { name: 'NOT FOUND', detail: `${email}` };
       return result;
     } catch (e) {

@@ -8,13 +8,13 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-export enum LoginType {
+export enum LoginTypeEnum {
   NAVER = 'NAVER',
   FORTYTWO = '42',
   KAKAO = 'KAKAO',
 }
 
-export enum UserRole {
+export enum UserRoleEnum {
   DEVELOPER = 'DEVR',
   COMMONUSER = 'USER',
   ADMIN = 'ADMIN',
@@ -22,6 +22,14 @@ export enum UserRole {
 
 @Entity('users')
 export class User {
+  @Column({
+    primary: true,
+    type: 'enum',
+    enum: LoginTypeEnum,
+    nullable: false,
+  })
+  login_type: LoginTypeEnum;
+
   @Column({
     type: 'varchar',
     primary: true,
@@ -45,17 +53,11 @@ export class User {
 
   @Column({
     type: 'enum',
-    enum: LoginType,
+    enum: UserRoleEnum,
     nullable: false,
+    default: UserRoleEnum.COMMONUSER,
   })
-  login_type: LoginType;
-
-  @Column({
-    type: 'enum',
-    enum: UserRole,
-    nullable: false,
-  })
-  user_role: UserRole;
+  user_role: UserRoleEnum;
 
   @Column({
     type: 'varchar',
@@ -63,6 +65,13 @@ export class User {
     nullable: false,
   })
   access_token: string;
+
+  @Column({
+    type: 'varchar',
+    length: 200,
+    nullable: true,
+  })
+  image_url: string;
 
   @CreateDateColumn()
   create_at: string;

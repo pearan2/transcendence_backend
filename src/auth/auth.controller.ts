@@ -1,17 +1,21 @@
-import { Controller, Get } from '@nestjs/common';
-import { UserService } from 'src/user/user.service';
+import { Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { JwtAuthGuard } from './jwt.strategy';
+import { LoginGuard } from './login.guard';
 
 @Controller('auth')
 export class AuthController {
-  constructor(
-    private readonly userService: UserService,
-    private readonly authService: AuthService,
-  ) {}
+  constructor(private readonly authService: AuthService) {}
 
-  @Get()
-  @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+  @UseGuards(LoginGuard)
+  @Post('login')
+  login(@Req() req) {
+    return this.authService.login(req.user);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('isLogined')
+  isLogined(@Req() req) {
+    return true;
   }
 }
